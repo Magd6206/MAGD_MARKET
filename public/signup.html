@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — MAGD MARKET</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body class="auth-page">
+  <div class="auth-layout">
+    <div class="auth-brand-panel">
+      <a href="index.html" class="nav-brand auth-brand-logo"><span class="brand-m">M</span>AGD<span class="brand-dot">.</span>MARKET</a>
+      <div class="auth-brand-content">
+        <h2>Join MAGD MARKET</h2>
+        <p>Create your free account and unlock a world of style.</p>
+        <div class="auth-brand-features">
+          <div class="auth-feat"><i class="fa fa-check-circle"></i><span>Free account — no credit card needed</span></div>
+          <div class="auth-feat"><i class="fa fa-check-circle"></i><span>Exclusive deals & early access</span></div>
+          <div class="auth-feat"><i class="fa fa-check-circle"></i><span>Easy order tracking</span></div>
+        </div>
+      </div>
+      <div class="auth-brand-shapes">
+        <div class="auth-shape auth-shape-1"></div>
+        <div class="auth-shape auth-shape-2"></div>
+      </div>
+    </div>
+    <div class="auth-form-panel">
+      <div class="auth-form-wrap">
+        <h1 class="auth-form-title">Create Account</h1>
+        <p class="auth-form-sub">Already have an account? <a href="login.html">Sign In</a></p>
+
+        <div class="alert alert-error" id="signupError" style="display:none"></div>
+        <div class="alert alert-success" id="signupSuccess" style="display:none"></div>
+
+        <form id="signupForm" novalidate>
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <div class="input-icon-wrap">
+              <i class="fa fa-user input-icon"></i>
+              <input type="text" id="signupName" class="input-field input-with-icon" placeholder="Your full name" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <div class="input-icon-wrap">
+              <i class="fa fa-envelope input-icon"></i>
+              <input type="email" id="signupEmail" class="input-field input-with-icon" placeholder="your@email.com" required autocomplete="email" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password *</label>
+            <div class="input-icon-wrap">
+              <i class="fa fa-lock input-icon"></i>
+              <input type="password" id="signupPassword" class="input-field input-with-icon" placeholder="At least 6 characters" required autocomplete="new-password" />
+              <button type="button" class="input-icon-right toggle-pw" id="togglePwSignup" aria-label="Show password"><i class="fa fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <div class="input-icon-wrap">
+              <i class="fa fa-phone input-icon"></i>
+              <input type="tel" id="signupPhone" class="input-field input-with-icon" placeholder="+20 100 000 0000" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <div class="input-icon-wrap">
+              <i class="fa fa-map-marker-alt input-icon"></i>
+              <input type="text" id="signupAddress" class="input-field input-with-icon" placeholder="Your city / address" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="signupBtn">
+            <span id="signupBtnText">Create Account</span>
+            <span id="signupSpinner" style="display:none"><i class="fa fa-spinner fa-spin"></i> Creating...</span>
+          </button>
+        </form>
+
+        <p class="auth-alt-link">Back to <a href="index.html">Home</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/signup.js"></script>
+</body>
+</html>

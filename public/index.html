@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAGD MARKET — Clothing & Footwear</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-m">M</span>AGD<span class="brand-dot">.</span>MARKET
+      </a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li class="nav-dropdown">
+          <a href="#">Categories <i class="fa fa-chevron-down"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="shop.html?mainCategory=Men">Men</a></li>
+            <li><a href="shop.html?mainCategory=Women">Women</a></li>
+            <li><a href="shop.html?mainCategory=Kids">Kids</a></li>
+            <li class="divider"></li>
+            <li><a href="shop.html?subCategory=Shoes">Shoes</a></li>
+            <li><a href="shop.html?subCategory=Clothing">Clothing</a></li>
+            <li><a href="shop.html?subCategory=Accessories">Accessories</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-icon-btn" aria-label="Cart">
+          <i class="fa fa-shopping-bag"></i>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </a>
+        <div class="nav-user-menu" id="navUserMenu">
+          <button class="nav-icon-btn" id="userMenuBtn" aria-label="Account">
+            <i class="fa fa-user-circle"></i>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <div id="guestLinks">
+              <a href="login.html"><i class="fa fa-sign-in-alt"></i> Login</a>
+              <a href="signup.html"><i class="fa fa-user-plus"></i> Sign Up</a>
+            </div>
+            <div id="authLinks" style="display:none">
+              <a href="orders.html"><i class="fa fa-box"></i> My Orders</a>
+              <a href="profile.html"><i class="fa fa-user"></i> Profile</a>
+              <a href="#" id="adminLink" style="display:none"><i class="fa fa-shield-halved"></i> Admin Panel</a>
+              <hr />
+              <a href="#" id="logoutBtn"><i class="fa fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="hero-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+      <span class="hero-badge">New Collection 2026</span>
+      <h1 class="hero-title">
+        Style That<br />
+        <em>Speaks</em> for You
+      </h1>
+      <p class="hero-subtitle">
+        Discover curated clothing & footwear crafted for every mood, moment, and movement.
+      </p>
+      <div class="hero-cta">
+        <a href="shop.html" class="btn btn-primary btn-lg">Shop Now <i class="fa fa-arrow-right"></i></a>
+        <a href="shop.html?mainCategory=Women" class="btn btn-outline btn-lg">Women's Edit</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Products</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">10K+</span><span class="stat-label">Happy Customers</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">4.8★</span><span class="stat-label">Avg Rating</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="hero-card hero-card--back"></div>
+        <div class="hero-card hero-card--main">
+          <div class="hero-card-inner">
+            <div class="hero-product-img">
+              <i class="fa fa-shirt hero-product-icon"></i>
+            </div>
+            <div class="hero-product-info">
+              <span class="hero-product-tag">Trending</span>
+              <p class="hero-product-name">Summer Collection</p>
+              <div class="hero-product-stars">
+                <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-stroke"></i>
+                <span>4.5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CATEGORY TILES ===================== -->
+  <section class="categories section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-sub">Find your perfect fit across our collections</p>
+      </div>
+      <div class="category-grid">
+        <a href="shop.html?mainCategory=Men" class="cat-tile cat-tile--men">
+          <div class="cat-tile-inner">
+            <i class="fa fa-person cat-icon"></i>
+            <h3>Men</h3>
+            <span>Explore →</span>
+          </div>
+        </a>
+        <a href="shop.html?mainCategory=Women" class="cat-tile cat-tile--women">
+          <div class="cat-tile-inner">
+            <i class="fa fa-person-dress cat-icon"></i>
+            <h3>Women</h3>
+            <span>Explore →</span>
+          </div>
+        </a>
+        <a href="shop.html?mainCategory=Kids" class="cat-tile cat-tile--kids">
+          <div class="cat-tile-inner">
+            <i class="fa fa-child cat-icon"></i>
+            <h3>Kids</h3>
+            <span>Explore →</span>
+          </div>
+        </a>
+        <a href="shop.html?subCategory=Shoes" class="cat-tile cat-tile--shoes">
+          <div class="cat-tile-inner">
+            <i class="fa fa-shoe-prints cat-icon"></i>
+            <h3>Shoes</h3>
+            <span>Explore →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FEATURED PRODUCTS ===================== -->
+  <section class="featured section" id="featuredSection">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Featured Products</h2>
+        <a href="shop.html" class="section-link">View All <i class="fa fa-arrow-right"></i></a>
+      </div>
+      <div class="products-grid" id="featuredGrid">
+        <!-- Injected by JS -->
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROMO BANNER ===================== -->
+  <section class="promo-banner section">
+    <div class="container">
+      <div class="promo-card">
+        <div class="promo-text">
+          <span class="promo-eyebrow">Limited Time Offer</span>
+          <h2>Use Code <span class="promo-code">MAJD20</span> for 20% OFF</h2>
+          <p>Apply at checkout on any order above $50</p>
+          <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+        </div>
+        <div class="promo-visual">
+          <div class="promo-icon-wrap">
+            <i class="fa fa-tags"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WHY US ===================== -->
+  <section class="features section">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa fa-truck-fast"></i></div>
+          <h4>Fast Delivery</h4>
+          <p>Get your order within 2–4 business days</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa fa-rotate-left"></i></div>
+          <h4>Easy Returns</h4>
+          <p>30-day hassle-free return policy</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa fa-shield-halved"></i></div>
+          <h4>Secure Payments</h4>
+          <p>Your data is always protected</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa fa-headset"></i></div>
+          <h4>24/7 Support</h4>
+          <p>We're here whenever you need us</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-brand">
+            <span class="brand-m">M</span>AGD<span class="brand-dot">.</span>MARKET
+          </a>
+          <p>Curated clothing & footwear for every style and every story.</p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h5>Shop</h5>
+          <ul>
+            <li><a href="shop.html?mainCategory=Men">Men</a></li>
+            <li><a href="shop.html?mainCategory=Women">Women</a></li>
+            <li><a href="shop.html?mainCategory=Kids">Kids</a></li>
+            <li><a href="shop.html?subCategory=Shoes">Shoes</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>Account</h5>
+          <ul>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">Sign Up</a></li>
+            <li><a href="orders.html">My Orders</a></li>
+            <li><a href="cart.html">Cart</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>Help</h5>
+          <ul>
+            <li><a href="#">Shipping Info</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Size Guide</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 MAGD MARKET. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast notification -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

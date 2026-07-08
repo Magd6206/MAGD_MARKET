@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — MAGD MARKET</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand"><span class="brand-m">M</span>AGD<span class="brand-dot">.</span>MARKET</a>
+      <button class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html" class="active">Shop</a></li>
+        <li class="nav-dropdown">
+          <a href="#">Categories <i class="fa fa-chevron-down"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="shop.html?mainCategory=Men">Men</a></li>
+            <li><a href="shop.html?mainCategory=Women">Women</a></li>
+            <li><a href="shop.html?mainCategory=Kids">Kids</a></li>
+            <li class="divider"></li>
+            <li><a href="shop.html?subCategory=Shoes">Shoes</a></li>
+            <li><a href="shop.html?subCategory=Clothing">Clothing</a></li>
+            <li><a href="shop.html?subCategory=Accessories">Accessories</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-icon-btn"><i class="fa fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+        <div class="nav-user-menu" id="navUserMenu">
+          <button class="nav-icon-btn" id="userMenuBtn"><i class="fa fa-user-circle"></i></button>
+          <div class="user-dropdown" id="userDropdown">
+            <div id="guestLinks"><a href="login.html"><i class="fa fa-sign-in-alt"></i> Login</a><a href="signup.html"><i class="fa fa-user-plus"></i> Sign Up</a></div>
+            <div id="authLinks" style="display:none">
+              <a href="orders.html"><i class="fa fa-box"></i> My Orders</a>
+              <a href="profile.html"><i class="fa fa-user"></i> Profile</a>
+              <a href="#" id="adminLink" style="display:none"><i class="fa fa-shield-halved"></i> Admin Panel</a>
+              <hr /><a href="#" id="logoutBtn"><i class="fa fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <h1>Shop</h1>
+      <nav class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>Shop</span></nav>
+    </div>
+  </div>
+
+  <!-- SHOP LAYOUT -->
+  <div class="shop-layout container section">
+    <!-- SIDEBAR FILTERS -->
+    <aside class="shop-sidebar" id="shopSidebar">
+      <div class="sidebar-header">
+        <h3>Filters</h3>
+        <button class="sidebar-close" id="sidebarClose"><i class="fa fa-times"></i></button>
+      </div>
+
+      <div class="filter-group">
+        <h4>Main Category</h4>
+        <div class="filter-chips" id="mainCatChips">
+          <button class="chip chip--active" data-filter="mainCategory" data-value="">All</button>
+          <button class="chip" data-filter="mainCategory" data-value="Men">Men</button>
+          <button class="chip" data-filter="mainCategory" data-value="Women">Women</button>
+          <button class="chip" data-filter="mainCategory" data-value="Kids">Kids</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Sub Category</h4>
+        <div class="filter-chips" id="subCatChips">
+          <button class="chip chip--active" data-filter="subCategory" data-value="">All</button>
+          <button class="chip" data-filter="subCategory" data-value="Shoes">Shoes</button>
+          <button class="chip" data-filter="subCategory" data-value="Clothing">Clothing</button>
+          <button class="chip" data-filter="subCategory" data-value="Accessories">Accessories</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Price Range</h4>
+        <div class="price-range-inputs">
+          <div class="price-input-wrap">
+            <label>Min ($)</label>
+            <input type="number" id="minPrice" class="input-field" placeholder="0" min="0" />
+          </div>
+          <span class="price-dash">—</span>
+          <div class="price-input-wrap">
+            <label>Max ($)</label>
+            <input type="number" id="maxPrice" class="input-field" placeholder="9999" min="0" />
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-full" id="applyPrice">Apply Price</button>
+      </div>
+
+      <button class="btn btn-ghost btn-sm btn-full mt-2" id="clearFilters">
+        <i class="fa fa-rotate-left"></i> Clear All Filters
+      </button>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="shop-main">
+      <div class="shop-toolbar">
+        <button class="btn btn-outline btn-sm" id="filterToggleBtn">
+          <i class="fa fa-sliders"></i> Filters
+        </button>
+        <div class="shop-count" id="shopCount">Loading products...</div>
+        <div class="shop-search">
+          <input type="text" id="searchInput" class="input-field" placeholder="Search products..." />
+          <i class="fa fa-search shop-search-icon"></i>
+        </div>
+      </div>
+
+      <div class="products-grid" id="shopGrid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <div class="empty-state" id="shopEmpty" style="display:none">
+        <i class="fa fa-box-open"></i>
+        <h3>No products found</h3>
+        <p>Try adjusting your filters or search term</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom"><p>&copy; 2026 MAGD MARKET. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/shop.js"></script>
+</body>
+</html>

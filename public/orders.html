@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Orders — MAGD MARKET</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand"><span class="brand-m">M</span>AGD<span class="brand-dot">.</span>MARKET</a>
+      <button class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-icon-btn"><i class="fa fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+        <div class="nav-user-menu" id="navUserMenu">
+          <button class="nav-icon-btn" id="userMenuBtn"><i class="fa fa-user-circle"></i></button>
+          <div class="user-dropdown" id="userDropdown">
+            <div id="guestLinks"><a href="login.html"><i class="fa fa-sign-in-alt"></i> Login</a><a href="signup.html"><i class="fa fa-user-plus"></i> Sign Up</a></div>
+            <div id="authLinks" style="display:none">
+              <a href="orders.html"><i class="fa fa-box"></i> My Orders</a>
+              <a href="profile.html"><i class="fa fa-user"></i> Profile</a>
+              <a href="#" id="adminLink" style="display:none"><i class="fa fa-shield-halved"></i> Admin Panel</a>
+              <hr /><a href="#" id="logoutBtn"><i class="fa fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>My Orders</h1>
+      <nav class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>Orders</span></nav>
+    </div>
+  </div>
+
+  <div class="auth-required-msg container section" id="authRequiredMsg" style="display:none">
+    <div class="empty-state"><i class="fa fa-lock"></i><h3>Login Required</h3><p>Please login to view your orders</p><a href="login.html" class="btn btn-primary">Login Now</a></div>
+  </div>
+
+  <div class="container section" id="ordersContent" style="display:none">
+    <div id="ordersList"></div>
+    <div class="empty-state" id="ordersEmpty" style="display:none">
+      <i class="fa fa-box-open"></i>
+      <h3>No orders yet</h3>
+      <p>When you place an order, it'll appear here</p>
+      <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container"><div class="footer-bottom"><p>&copy; 2026 MAGD MARKET. All rights reserved.</p></div></div>
+  </footer>
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/orders.js"></script>
+</body>
+</html>

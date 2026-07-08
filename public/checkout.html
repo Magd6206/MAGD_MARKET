@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — MAGD MARKET</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand"><span class="brand-m">M</span>AGD<span class="brand-dot">.</span>MARKET</a>
+      <button class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-icon-btn"><i class="fa fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+        <div class="nav-user-menu" id="navUserMenu">
+          <button class="nav-icon-btn" id="userMenuBtn"><i class="fa fa-user-circle"></i></button>
+          <div class="user-dropdown" id="userDropdown">
+            <div id="guestLinks"><a href="login.html"><i class="fa fa-sign-in-alt"></i> Login</a><a href="signup.html"><i class="fa fa-user-plus"></i> Sign Up</a></div>
+            <div id="authLinks" style="display:none">
+              <a href="orders.html"><i class="fa fa-box"></i> My Orders</a>
+              <a href="profile.html"><i class="fa fa-user"></i> Profile</a>
+              <a href="#" id="adminLink" style="display:none"><i class="fa fa-shield-halved"></i> Admin Panel</a>
+              <hr /><a href="#" id="logoutBtn"><i class="fa fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Checkout</h1>
+      <nav class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <a href="cart.html">Cart</a> <span>/</span> <span>Checkout</span></nav>
+    </div>
+  </div>
+
+  <!-- AUTH GUARD -->
+  <div class="auth-required-msg container section" id="authRequiredMsg" style="display:none">
+    <div class="empty-state">
+      <i class="fa fa-lock"></i>
+      <h3>Login Required</h3>
+      <p>Please login to proceed to checkout</p>
+      <a href="login.html" class="btn btn-primary">Login Now</a>
+    </div>
+  </div>
+
+  <!-- CHECKOUT LAYOUT -->
+  <div class="checkout-layout container section" id="checkoutLayout" style="display:none">
+    <!-- Form -->
+    <div class="checkout-form-col">
+      <!-- Progress Steps -->
+      <div class="checkout-steps">
+        <div class="step active"><span class="step-num">1</span><span class="step-label">Shipping</span></div>
+        <div class="step-line"></div>
+        <div class="step"><span class="step-num">2</span><span class="step-label">Coupon</span></div>
+        <div class="step-line"></div>
+        <div class="step"><span class="step-num">3</span><span class="step-label">Review</span></div>
+      </div>
+
+      <form id="checkoutForm" class="checkout-form-card" novalidate>
+        <h3><i class="fa fa-location-dot"></i> Shipping Address</h3>
+
+        <div class="form-group">
+          <label class="form-label">City *</label>
+          <input type="text" id="shipCity" class="input-field" placeholder="e.g. Cairo" required />
+          <span class="field-error" id="cityError"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Street Address *</label>
+          <input type="text" id="shipStreet" class="input-field" placeholder="e.g. 123 Main St, Apt 4B" required />
+          <span class="field-error" id="streetError"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number *</label>
+          <input type="tel" id="shipPhone" class="input-field" placeholder="e.g. +20 100 123 4567" required />
+          <span class="field-error" id="phoneError"></span>
+        </div>
+
+        <div class="coupon-section checkout-coupon">
+          <h3><i class="fa fa-ticket"></i> Coupon Code</h3>
+          <div class="coupon-input-row">
+            <input type="text" id="couponInput" class="input-field" placeholder="Enter coupon code (optional)" />
+            <button type="button" class="btn btn-outline btn-sm" id="validateCouponBtn">Validate</button>
+          </div>
+          <div class="coupon-feedback" id="couponFeedback"></div>
+          <div class="coupon-applied-info" id="couponAppliedInfo" style="display:none">
+            <i class="fa fa-check-circle"></i>
+            <span id="couponAppliedText"></span>
+            <button type="button" class="coupon-remove-btn" id="removeCouponBtn"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-accent btn-full btn-lg" id="placeOrderBtn">
+          <span id="placeOrderBtnText"><i class="fa fa-check-circle"></i> Place Order</span>
+          <span id="placeOrderSpinner" style="display:none"><i class="fa fa-spinner fa-spin"></i> Processing...</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="checkout-summary-col">
+      <div class="order-summary-card">
+        <h3>Order Summary</h3>
+        <div class="checkout-items-list" id="checkoutItemsList"></div>
+        <hr class="summary-divider" />
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="checkoutSubtotal">$0.00</span>
+        </div>
+        <div class="summary-row" id="checkoutDiscountRow" style="display:none">
+          <span class="discount-label"><i class="fa fa-tag"></i> Discount</span>
+          <span class="discount-amount" id="checkoutDiscount">-$0.00</span>
+        </div>
+        <div class="summary-row summary-row--total">
+          <span>Total</span>
+          <span id="checkoutTotal">$0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS OVERLAY -->
+  <div class="order-success-overlay" id="orderSuccessOverlay" style="display:none">
+    <div class="order-success-card">
+      <div class="success-icon"><i class="fa fa-check-circle"></i></div>
+      <h2>Order Placed!</h2>
+      <p>Your order has been received and is being processed.</p>
+      <p class="order-id-text">Order ID: <strong id="successOrderId"></strong></p>
+      <div class="success-actions">
+        <a href="orders.html" class="btn btn-primary">Track Orders</a>
+        <a href="shop.html" class="btn btn-outline">Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom"><p>&copy; 2026 MAGD MARKET. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
