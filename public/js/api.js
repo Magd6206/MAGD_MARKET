@@ -4,7 +4,7 @@
  */
 // Backend runs on port 3000. Frontend runs on port 5000.
 // These two processes are completely independent.
-const API_BASE = "https://magd-market.onrender.com/api/v1";
+const API_BASE = "https://magd-market-1.onrender.com/api/v1";
 
 const api = {
   /** Generic fetch wrapper */
