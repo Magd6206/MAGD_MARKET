@@ -16,6 +16,43 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 
+// ─── CORS CONFIGURATION ──────────────────────────────────────────────────────
+const ALLOWED_ORIGINS = [
+  "http://localhost:5000",
+  "http://localhost:5173",
+  "https://magd.market",
+  "https://www.magd.market",
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // السماح بالطلب إذا كان محلياً، من أداة اختبار (بدون origin)، أو مسجل بالقائمة
+    if (
+      !origin ||
+      ALLOWED_ORIGINS.includes(origin) ||
+      origin === process.env.FRONTEND_URL
+    ) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true, // مهم جداً لتبادل الكوكيز و الـ Tokens الآمنة
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+  ],
+};
+
+// تفعيل إعدادات الـ CORS للطلبات العادية
+app.use(cors(corsOptions));
+
+// 🚨 حل مشكلة الـ OPTIONS (Preflight): الاستجابة الفورية قبل أي ميدل وير آخر قد يسبب الـ 500
+app.options("*", cors(corsOptions));
+
+// ─── SOCKET.IO ───────────────────────────────────────────────────────────────
 const io = new Server(server, {
   cors: {
     origin: process.env.FRONTEND_URL || "http://localhost:5000",
@@ -23,47 +60,18 @@ const io = new Server(server, {
   },
 });
 
-// ─── CORS CONFIGURATION ──────────────────────────────────────────────────────
-// يدعم الرابط الموجود في الـ .env (المحلي) ورابط موقعك المرفوع تلقائياً
-const ALLOWED_ORIGINS = [
-  "http://localhost:5000",
-  "http://localhost:5173", // احتياطاً لو استعملت Vite محلياً مستقبلاً
-  "https://magd.market", // 👈 رابط موقعك المرفوع الأساسي
-  "https://www.magd.market",
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // السماح بالطلبات التي لا تملك Origin (مثل Postman أو السيرفرات الجانبية)
-      if (!origin) return callback(null, true);
-
-      // التحقق إذا كان الرابط القادم مسموحاً به أو مطابقاً للـ .env
-      if (
-        ALLOWED_ORIGINS.indexOf(origin) !== -1 ||
-        origin === process.env.FRONTEND_URL
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // مطلوب لتبادل الكوكيز الآمنة HTTP-Only
-  }),
-);
-
-// ─── SECURITY MIDDLEWARES (الترتيب الصحيح لحماية السيرفر أولاً) ───────────────
+// ─── SECURITY MIDDLEWARES ────────────────────────────────────────────────────
 app.use(helmet());
 app.use(hpp());
 app.use(xss);
-app.use(limiter); // الـ Rate Limiter لحظر الإغراق والـ Bots قبل معالجة الطلب
+app.use(limiter); // حظر الـ Bots والإغراق مبكراً
 
 // ─── GLOBAL PARSERS & STATICS ────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookies());
 
-// Static uploads (product images)
+// Static uploads
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(morgan("dev"));
 
@@ -79,13 +87,13 @@ app.get("/api/v1/Test", (req, res) => {
 app.use("/api/v1/auth", require("./routers/auth.routes"));
 app.use("/api/v1/users", require("./routers/user.routes"));
 app.use("/api/v1/uploads", require("./routers/uploads.route"));
-app.use("/api/v1/prodects", require("./routers/prodect.routes")); // ملاحظة: تأكد من إملاء كلمة products لاحقاً
+app.use("/api/v1/prodects", require("./routers/prodect.routes"));
 app.use("/api/v1/carts", require("./routers/cart.routes"));
 app.use("/api/v1/orders", require("./routers/order.routes"));
 app.use("/api/v1/coupons", require("./routers/coupon.routes"));
 app.use("/api/v1/reviews", require("./routers/review.routes"));
 
-// ─── SOCKET.IO ───────────────────────────────────────────────────────────────
+// ─── SOCKET.IO CONNECTIONS ───────────────────────────────────────────────────
 io.on("connection", (socket) => {
   console.log("Connected ID:", socket.id);
 
