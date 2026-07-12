@@ -22,11 +22,11 @@ app.use("/api/v1/coupons", require("./routers/coupon.routes"));
 app.use("/api/v1/reviews", require("./routers/review.routes"));
 
 // ─── 2. خدمة ملفات الفرونت إند (تأتي بعد الـ API) ───
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 // ─── 3. الـ CATCH-ALL (آخر شيء في الترتيب) ───
-app.get(/^(?!\/api).+/, (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
 // Start Server
