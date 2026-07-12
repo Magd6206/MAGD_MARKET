@@ -25,8 +25,8 @@ app.use("/api/v1/reviews", require("./routers/review.routes"));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 // ─── 3. الـ CATCH-ALL (آخر شيء في الترتيب) ───
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+app.get(/^(?!\/api).+/, (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Start Server
