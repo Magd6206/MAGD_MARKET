@@ -7,8 +7,8 @@ const notFoundHandler = require("./middlewares/notFound");
 const errorHandler = require("./middlewares/errHandler");
 const cors = require("cors");
 const helmet = require("helmet");
-const hpp = require("hpp"); // حماية Parameter Pollution
-const xss = require("./middlewares/xss"); // ميدل وير الحماية من XSS
+const hpp = require("hpp");
+const xss = require("./middlewares/xss");
 const { limiter } = require("./middlewares/limiter");
 const path = require("path");
 const app = express();
@@ -22,8 +22,7 @@ const ALLOWED_ORIGINS = [
   "http://localhost:5173",
   "https://magd.market",
   "https://www.magd.market",
-  "https://magd-market-1.onrender.com", // 🚨 أضفنا رابط ريندر هنا كإجراء أمان إضافي
-  "https://magd-market-2.onrender.com",
+  "https://magd-market-1.onrender.com",
 ];
 
 const corsOptions = {
@@ -47,8 +46,8 @@ const corsOptions = {
   ],
 };
 
+// تفعيل CORS مرة واحدة فقط (الاستدعاء المتكرر يسبب أخطاء)
 app.use(cors(corsOptions));
-app.options("/:splat*", cors(corsOptions)); // 🚨 أضفنا سلاش قبل النجمة
 
 // ─── SOCKET.IO ───────────────────────────────────────────────────────────────
 const io = new Server(server, {
@@ -59,12 +58,7 @@ const io = new Server(server, {
 });
 
 // ─── SECURITY MIDDLEWARES ────────────────────────────────────────────────────
-// 🚨 تعديل بسيط في helmet لكي يسمح بتحميل خطوط Google والأيقونات دون مشاكل في الفرونت إند
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-  }),
-);
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(hpp());
 app.use(xss);
 app.use(limiter);
@@ -74,20 +68,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookies());
 
-// 🚨 1. تفعيل عرض ملفات الفرونت إند الثابتة (تأكد أن مجلد الواجهات اسمه public)
+// تفعيل الملفات الثابتة
 app.use(express.static(path.join(__dirname, "public")));
-
-// Static uploads
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(morgan("dev"));
-
-// ─── TEST ENDPOINT ───────────────────────────────────────────────────────────
-app.get("/api/v1/Test", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Test endpoint is working successfully!",
-  });
-});
 
 // ─── ROUTES ──────────────────────────────────────────────────────────────────
 app.use("/api/v1/auth", require("./routers/auth.routes"));
@@ -99,31 +83,17 @@ app.use("/api/v1/orders", require("./routers/order.routes"));
 app.use("/api/v1/coupons", require("./routers/coupon.routes"));
 app.use("/api/v1/reviews", require("./routers/review.routes"));
 
-// 🚨 2. السطر السحري: إذا طلب المستخدم أي مسار واجهات (مثل /login أو /signup)، أرسل له ملف index.html
-// يجب وضعه بعد مسارات الـ API وقبل الـ Error Handlers مباشرة
-app.get("/:splat*", (req, res, next) => {
-  if (req.path.startsWith("/api")) {
-    return next();
-  }
+// ─── FRONTEND CATCH-ALL (الحل النهائي الآمن) ──────────────────────────────────
+// استخدام RegExp كـ Object يمنع انهيار السيرفر نهائياً مع الإصدارات الحديثة
+app.get(/^(?!\/api).+/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // ─── SOCKET.IO CONNECTIONS ───────────────────────────────────────────────────
 io.on("connection", (socket) => {
   console.log("Connected ID:", socket.id);
-
-  socket.on("msg", (data) => {
-    console.log("i see message " + data);
-  });
-
-  socket.on("sentEmail", (data) => {
-    console.log("i Receved Message");
-    socket.emit("World", { a: 1 });
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Leaved : ", socket.id);
-  });
+  socket.on("msg", (data) => console.log("i see message " + data));
+  socket.on("disconnect", () => console.log("Leaved : ", socket.id));
 });
 
 // ─── ERROR HANDLERS ──────────────────────────────────────────────────────────
@@ -132,16 +102,11 @@ app.use(errorHandler);
 
 // ─── SERVER START ────────────────────────────────────────────────────────────
 const PORT = process.env.BACKEND_PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI;
-
 mongoose
-  .connect(MONGODB_URI)
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     server.listen(PORT, () => {
-      console.log("✅ Connected to MongoDB");
-      console.log(`🚀 Backend API running on port ${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   })
-  .catch((error) => {
-    console.error("Error connecting to MongoDB:", error);
-  });
+  .catch((err) => console.error("Database Connection Error:", err));
