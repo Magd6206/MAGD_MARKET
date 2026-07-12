@@ -1,5 +1,8 @@
 const api = {
   async _request(method, path, body = null) {
+    // 🎯 إضافة السطر الذي طلبته لمراقبة المسار
+    console.log("الرابط الذي يتم طلبه حالياً:", path);
+
     const opts = {
       method,
       credentials: "include",
@@ -8,22 +11,20 @@ const api = {
     if (body) opts.body = JSON.stringify(body);
 
     const res = await fetch(path, opts);
-    const text = await res.text(); // قراءة الاستجابة كنص أولاً
+    const text = await res.text();
 
     try {
-      const data = JSON.parse(text); // محاولة تحويل النص إلى JSON
+      const data = JSON.parse(text);
       if (!res.ok) throw data;
       return data;
     } catch (e) {
-      // هنا سنعرف بالضبط ما هو الخطأ (مثلاً إذا استلمنا كود HTML)
       console.error("خطأ في الطلب للمسار:", path);
-      console.error(
-        "محتوى الاستجابة المستلم (قد يكون HTML):",
-        text.substring(0, 200),
-      );
+      // إذا كان الخطأ هو HTML، فسنعرف الآن بوضوح من خلال الـ Console
+      console.error("محتوى الاستجابة المستلم:", text.substring(0, 200));
+
       throw {
         status: res.status,
-        message: "فشل في معالجة البيانات، تأكد من أن المسار يبدأ بـ /api/v1/",
+        message: `فشل في معالجة البيانات للمسار: ${path}`,
       };
     }
   },
@@ -33,12 +34,14 @@ const api = {
   put: (path, body) => api._request("PUT", path, body),
   delete: (path, body) => api._request("DELETE", path, body),
 
-  // أمثلة للتأكد من المسارات
   auth: {
     signup: (d) => api.post("/api/v1/auth/signup", d),
     login: (d) => api.post("/api/v1/auth/login", d),
   },
-  // تأكد أن جميع الدوال الأخرى في هذا الملف تبدأ بـ /api/v1/
+  products: {
+    getAll: (q = "") => api.get("/api/v1/prodects" + q),
+    getById: (id) => api.get(`/api/v1/prodects/${id}`),
+  },
 };
 
 window.api = api;
