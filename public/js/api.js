@@ -1,27 +1,37 @@
 /**
  * MAGD MARKET — API Service Layer
- * All HTTP calls to the Express backend
+ * مُعدل ليتوافق مع الدمج (Monolith) على Render
  */
-// Backend runs on port 3000. Frontend runs on port 5000.
-// These two processes are completely independent.
+
 const isLocal =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
 
-// إذا كنت تشتغل محلياً عبر بورت 5000، سيتوجه الطلب تلقائياً لبورت 3000 (الباك إند)
-// وإذا رُفع على Render، سيتحدث مع نفس السيرفر المدمج تلقائياً
-const API_BASE = isLocal ? "http://localhost:3000/api/v1" : "/api/v1";
+// إذا كنا محلياً نستخدم بورت 3000، وإذا كنا على السيرفر نستخدم الرابط مباشرة
+const API_BASE = isLocal ? "http://localhost:3000" : "";
 
 const api = {
   /** Generic fetch wrapper */
   async _request(method, path, body = null) {
     const opts = {
       method,
-      credentials: "include", // send/receive HTTP-only cookies
+      credentials: "include", // إرسال الكوكيز والتوكنز
       headers: { "Content-Type": "application/json" },
     };
     if (body) opts.body = JSON.stringify(body);
+
+    // المسار الآن يبدأ بـ /api/v1 دائماً عبر المتغير path
     const res = await fetch(`${API_BASE}${path}`, opts);
+
+    // فحص الاستجابة للتأكد أنها JSON وليست HTML (صفحة خطأ)
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw {
+        status: res.status,
+        message: "Server returned non-JSON response",
+      };
+    }
+
     const data = await res.json();
     if (!res.ok)
       throw {
@@ -37,69 +47,64 @@ const api = {
   put: (path, body) => api._request("PUT", path, body),
   delete: (path, body) => api._request("DELETE", path, body),
 
-  // --- Auth ---
+  // --- Auth (كل المسارات تبدأ بـ /api/v1) ---
   auth: {
-    signup: (d) => api.post("/auth/signup", d),
-    login: (d) => api.post("/auth/login", d),
-    logout: () => api.post("/auth/logout"),
-    profile: () => api.get("/auth/profile"),
-    refresh: () => api.put("/auth/refresh_Token"),
+    signup: (d) => api.post("/api/v1/auth/signup", d),
+    login: (d) => api.post("/api/v1/auth/login", d),
+    logout: () => api.post("/api/v1/auth/logout"),
+    profile: () => api.get("/api/v1/auth/profile"),
+    refresh: () => api.put("/api/v1/auth/refresh_Token"),
   },
 
   // --- Users ---
   users: {
-    me: () => api.get("/users/me"),
-    updateMe: (d) => api.put("/users/update-me", d),
-    getAll: () => api.get("/users/"),
-    getById: (id) => api.get(`/users/${id}`),
-    delete: (id) => api.delete(`/users/${id}`),
+    me: () => api.get("/api/v1/users/me"),
+    updateMe: (d) => api.put("/api/v1/users/update-me", d),
+    getAll: () => api.get("/api/v1/users/"),
+    getById: (id) => api.get(`/api/v1/users/${id}`),
+    delete: (id) => api.delete(`/api/v1/users/${id}`),
   },
 
   // --- Products ---
   products: {
-    getAll: (q = {}) => api.get("/prodects" + buildQuery(q)),
-    getById: (id) => api.get(`/prodects/${id}`),
-    create: (d) => api.post("/prodects", d),
-    update: (id, d) => api.put(`/prodects/${id}`, d),
-    delete: (id) => api.delete(`/prodects/${id}`),
-    updateVariantStock: (productId, variantId, stock) =>
-      api.put(`/prodects/${productId}/variants/${variantId}`, { stock }),
+    getAll: (q = {}) => api.get("/api/v1/prodects" + buildQuery(q)),
+    getById: (id) => api.get(`/api/v1/prodects/${id}`),
+    create: (d) => api.post("/api/v1/prodects", d),
+    update: (id, d) => api.put(`/api/v1/prodects/${id}`, d),
+    delete: (id) => api.delete(`/api/v1/prodects/${id}`),
   },
 
   // --- Cart ---
   cart: {
-    get: () => api.get("/carts/ByIdUser"),
-    add: (d) => api.post("/carts/creatCart", d),
-    updateQty: (d) => api.put("/carts/updateQuantity", d),
-    remove: (d) => api.delete("/carts/removeItem", d),
-    clear: () => api.delete("/carts/clear"),
+    get: () => api.get("/api/v1/carts/ByIdUser"),
+    add: (d) => api.post("/api/v1/carts/creatCart", d),
+    updateQty: (d) => api.put("/api/v1/carts/updateQuantity", d),
+    remove: (d) => api.delete("/api/v1/carts/removeItem", d),
+    clear: () => api.delete("/api/v1/carts/clear"),
   },
 
   // --- Orders ---
   orders: {
-    create: (d) => api.post("/orders/createOrder", d),
-    myOrders: () => api.get("/orders/my-orders"),
-    cancel: (id) => api.put(`/orders/cancel/${id}`),
-    adminAll: () => api.get("/orders/admin/all"),
-    adminUpdate: (id, d) => api.put(`/orders/admin/update/${id}`, d),
+    create: (d) => api.post("/api/v1/orders/createOrder", d),
+    myOrders: () => api.get("/api/v1/orders/my-orders"),
+    cancel: (id) => api.put(`/api/v1/orders/cancel/${id}`),
+    adminAll: () => api.get("/api/v1/orders/admin/all"),
+    adminUpdate: (id, d) => api.put(`/api/v1/orders/admin/update/${id}`, d),
   },
 
-  // --- Coupons ---
+  // --- Coupons & Reviews ---
   coupons: {
-    validate: (code) => api.post("/coupons/validate", { code }),
-    create: (d) => api.post("/coupons/admin/create", d),
-    adminAll: () => api.get("/coupons/admin/all"),
+    validate: (code) => api.post("/api/v1/coupons/validate", { code }),
+    create: (d) => api.post("/api/v1/coupons/admin/create", d),
+    adminAll: () => api.get("/api/v1/coupons/admin/all"),
   },
-
-  // --- Reviews ---
   reviews: {
-    add: (d) => api.post("/reviews/add", d),
-    delete: (id) => api.delete(`/reviews/delete/${id}`),
-    getByProduct: (pid) => api.get(`/reviews/product/${pid}`),
+    add: (d) => api.post("/api/v1/reviews/add", d),
+    delete: (id) => api.delete(`/api/v1/reviews/delete/${id}`),
+    getByProduct: (pid) => api.get(`/api/v1/reviews/product/${pid}`),
   },
 };
 
-/** Builds a query string from a plain object, ignoring empty/null values */
 function buildQuery(params) {
   const parts = Object.entries(params)
     .filter(([, v]) => v !== "" && v !== null && v !== undefined)
