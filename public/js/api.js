@@ -1,5 +1,3 @@
-const API_BASE = ""; // فارغ لأننا في Monolith والفرونت والباك على نفس الرابط
-
 const api = {
   async _request(method, path, body = null) {
     const opts = {
@@ -9,20 +7,25 @@ const api = {
     };
     if (body) opts.body = JSON.stringify(body);
 
-    const res = await fetch(`${API_BASE}${path}`, opts);
+    const res = await fetch(path, opts);
+    const text = await res.text(); // قراءة الاستجابة كنص أولاً
 
-    // فحص ذكي: هل الاستجابة JSON؟
-    const contentType = res.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      console.error(`خطأ: المتصفح استلم HTML بدل JSON من المسار: ${path}`);
-      throw new Error(
-        "سيرفر الـ API أرسل استجابة غير صحيحة (HTML بدلاً من JSON)",
+    try {
+      const data = JSON.parse(text); // محاولة تحويل النص إلى JSON
+      if (!res.ok) throw data;
+      return data;
+    } catch (e) {
+      // هنا سنعرف بالضبط ما هو الخطأ (مثلاً إذا استلمنا كود HTML)
+      console.error("خطأ في الطلب للمسار:", path);
+      console.error(
+        "محتوى الاستجابة المستلم (قد يكون HTML):",
+        text.substring(0, 200),
       );
+      throw {
+        status: res.status,
+        message: "فشل في معالجة البيانات، تأكد من أن المسار يبدأ بـ /api/v1/",
+      };
     }
-
-    const data = await res.json();
-    if (!res.ok) throw data;
-    return data;
   },
 
   get: (path) => api._request("GET", path),
@@ -30,16 +33,12 @@ const api = {
   put: (path, body) => api._request("PUT", path, body),
   delete: (path, body) => api._request("DELETE", path, body),
 
-  // --- تحديث المسارات لتكون كاملة ومباشرة ---
+  // أمثلة للتأكد من المسارات
   auth: {
     signup: (d) => api.post("/api/v1/auth/signup", d),
     login: (d) => api.post("/api/v1/auth/login", d),
   },
-  products: {
-    getAll: (q = "") => api.get("/api/v1/prodects" + q),
-    getById: (id) => api.get(`/api/v1/prodects/${id}`),
-  },
-  // أضف بقية الدوال بنفس الطريقة (تأكد أنها تبدأ بـ /api/v1/)
+  // تأكد أن جميع الدوال الأخرى في هذا الملف تبدأ بـ /api/v1/
 };
 
 window.api = api;
