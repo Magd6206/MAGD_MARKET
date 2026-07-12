@@ -48,7 +48,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+app.options("/*", cors(corsOptions)); // 🚨 أضفنا سلاش قبل النجمة
 
 // ─── SOCKET.IO ───────────────────────────────────────────────────────────────
 const io = new Server(server, {
@@ -101,8 +101,8 @@ app.use("/api/v1/reviews", require("./routers/review.routes"));
 
 // 🚨 2. السطر السحري: إذا طلب المستخدم أي مسار واجهات (مثل /login أو /signup)، أرسل له ملف index.html
 // يجب وضعه بعد مسارات الـ API وقبل الـ Error Handlers مباشرة
-app.get("*", (req, res, next) => {
-  // إذا كان الطلب يبدأ بـ /api، نتركه يمر للميدل وير التالي (notFoundHandler)
+app.get("/*", (req, res, next) => {
+  // 🚨 أضفنا سلاش قبل النجمة هنا أيضاً
   if (req.path.startsWith("/api")) {
     return next();
   }
