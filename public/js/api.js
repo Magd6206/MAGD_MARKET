@@ -4,7 +4,13 @@
  */
 // Backend runs on port 3000. Frontend runs on port 5000.
 // These two processes are completely independent.
-const API_BASE = "https://magd-market-1.onrender.com/api/v1";
+const isLocal =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1";
+
+// إذا كنت تشتغل محلياً عبر بورت 5000، سيتوجه الطلب تلقائياً لبورت 3000 (الباك إند)
+// وإذا رُفع على Render، سيتحدث مع نفس السيرفر المدمج تلقائياً
+const API_BASE = isLocal ? "http://localhost:3000/api/v1" : "/api/v1";
 
 const api = {
   /** Generic fetch wrapper */

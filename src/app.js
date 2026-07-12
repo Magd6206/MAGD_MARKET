@@ -22,11 +22,12 @@ const ALLOWED_ORIGINS = [
   "http://localhost:5173",
   "https://magd.market",
   "https://www.magd.market",
+  "https://magd-market-1.onrender.com", // 🚨 أضفنا رابط ريندر هنا كإجراء أمان إضافي
+  "https://magd-market-2.onrender.com",
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // السماح بالطلب إذا كان محلياً، من أداة اختبار (بدون origin)، أو مسجل بالقائمة
     if (
       !origin ||
       ALLOWED_ORIGINS.includes(origin) ||
@@ -36,7 +37,7 @@ const corsOptions = {
     }
     return callback(new Error("Not allowed by CORS"));
   },
-  credentials: true, // مهم جداً لتبادل الكوكيز و الـ Tokens الآمنة
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
@@ -46,10 +47,7 @@ const corsOptions = {
   ],
 };
 
-// تفعيل إعدادات الـ CORS للطلبات العادية
 app.use(cors(corsOptions));
-
-// 🚨 حل مشكلة الـ OPTIONS (Preflight): الاستجابة الفورية قبل أي ميدل وير آخر قد يسبب الـ 500
 app.options("*", cors(corsOptions));
 
 // ─── SOCKET.IO ───────────────────────────────────────────────────────────────
@@ -61,15 +59,23 @@ const io = new Server(server, {
 });
 
 // ─── SECURITY MIDDLEWARES ────────────────────────────────────────────────────
-app.use(helmet());
+// 🚨 تعديل بسيط في helmet لكي يسمح بتحميل خطوط Google والأيقونات دون مشاكل في الفرونت إند
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(hpp());
 app.use(xss);
-app.use(limiter); // حظر الـ Bots والإغراق مبكراً
+app.use(limiter);
 
 // ─── GLOBAL PARSERS & STATICS ────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookies());
+
+// 🚨 1. تفعيل عرض ملفات الفرونت إند الثابتة (تأكد أن مجلد الواجهات اسمه public)
+app.use(express.static(path.join(__dirname, "public")));
 
 // Static uploads
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
@@ -92,6 +98,16 @@ app.use("/api/v1/carts", require("./routers/cart.routes"));
 app.use("/api/v1/orders", require("./routers/order.routes"));
 app.use("/api/v1/coupons", require("./routers/coupon.routes"));
 app.use("/api/v1/reviews", require("./routers/review.routes"));
+
+// 🚨 2. السطر السحري: إذا طلب المستخدم أي مسار واجهات (مثل /login أو /signup)، أرسل له ملف index.html
+// يجب وضعه بعد مسارات الـ API وقبل الـ Error Handlers مباشرة
+app.get("*", (req, res, next) => {
+  // إذا كان الطلب يبدأ بـ /api، نتركه يمر للميدل وير التالي (notFoundHandler)
+  if (req.path.startsWith("/api")) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 // ─── SOCKET.IO CONNECTIONS ───────────────────────────────────────────────────
 io.on("connection", (socket) => {
