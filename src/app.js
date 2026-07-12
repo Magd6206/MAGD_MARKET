@@ -21,12 +21,15 @@ app.use("/api/v1/orders", require("./routers/order.routes"));
 app.use("/api/v1/coupons", require("./routers/coupon.routes"));
 app.use("/api/v1/reviews", require("./routers/review.routes"));
 
-// ─── 2. خدمة ملفات الفرونت إند (تأتي بعد الـ API) ───
-app.use(express.static(path.join(__dirname, "..", "public")));
+// ─── 2. خدمة ملفات الفرونت إند ───
+// نستخدم ".." للخروج من مجلد src والوصول لمجلد public في الروت
+const publicPath = path.join(__dirname, "..", "public");
+app.use(express.static(publicPath));
 
-// ─── 3. الـ CATCH-ALL (آخر شيء في الترتيب) ───
+// ─── 3. الـ CATCH-ALL ───
 app.get(/^(?!\/api).+/, (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  // هنا أيضاً استخدمنا publicPath لضمان الوصول للملف الصحيح
+  res.sendFile(path.join(publicPath, "index.html"));
 });
 
 // Start Server
