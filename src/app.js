@@ -44,7 +44,7 @@ const app = express();
 // mobile clients, and any staging origin to reach the API.
 // credentials: true is required so HTTP-only cookies work correctly.
 app.use(cors({ origin: true, credentials: true }));
-app.options(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 
 // ─── Core Middleware ─────────────────────────────────────────────────────────
 app.use(express.json());
