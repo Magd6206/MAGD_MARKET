@@ -35,7 +35,7 @@ const path = require("path");
 const notFoundHandler = require("./middlewares/notFound");
 const errorHandler = require("./middlewares/errHandler");
 const xss = require("./middlewares/xss");
-const { limiter } = require("./middlewares/limiter");
+// const { limiter } = require("./middlewares/limiter");
 
 const app = express();
 
@@ -86,7 +86,7 @@ app.use(
 
 app.use(hpp());
 app.use(xss);
-app.use(limiter);
+// app.use(limiter);
 
 // ─── Logging ─────────────────────────────────────────────────────────────────
 if (process.env.NODE_ENV !== "test") {
