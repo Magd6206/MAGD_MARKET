@@ -1,13 +1,12 @@
 {
   "name": "magd_market",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Magd Market Full-Stack Application",
+  "main": "./src/app.js",
   "scripts": {
     "start": "node ./src/app.js",
-    "backend":  "nodemon ./src/app.js",
-    "frontend": "node frontend-server.js",
-    "watch":    "nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.js",
+    "backend": "nodemon ./src/app.js"
   },
   "keywords": [],
   "author": "",
